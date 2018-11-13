@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: qwer1234
+      MYSQL_USER: cola
+      MYSQL_PASSWORD: qwer1234
+      MYSQL_DATABASE: flatcoke
+    restart: always
+    ports:
+      - 3306:3306
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+volumes:
+  dbdata:
