@@ -18,22 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Pastebin API')
+schema_view = get_swagger_view(title='FLATCOKE API')
 
 urlpatterns = [
     url(r'^doc/', schema_view),
     path('admin/', admin.site.urls),
 
-    url(r'api/', include('api.urls')),
-    # url(r'^api/', include([
-    #     url(r'^v1/', include([
-    #         url(r'^users/', include('api.v1.users.urls')),
-    #     ])),
-    #
-    #     url(r'^v2/', include([
-    #     ])),
-    # ])),
-]
-# auth token ㅎㅐ야함!!
-urlpatterns += [
+    url(r'api/', include('api.urls')),  # All of api
+
+    url(r'', include('rest_framework.urls', namespace='rest_framework')),
 ]

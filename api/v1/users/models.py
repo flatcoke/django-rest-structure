@@ -76,6 +76,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
         db_table = 'users'
 
+        ordering = ['-id']
+
         indexes = [
             models.Index(fields=['created_at'], name='users.created_at'),
         ]

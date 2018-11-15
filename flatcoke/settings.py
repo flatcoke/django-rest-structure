@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'api.v1.users',
 
     'rest_framework',
-    # 'rest_framework.authtoken',
     'rest_framework_swagger',
 ]
 
@@ -57,7 +56,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'flatcoke.urls'
 
 AUTH_USER_MODEL = 'users.User'
-
 
 TEMPLATES = [
     {
@@ -138,40 +136,18 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+        # FIXME: session only dev
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
 
-# SWAGGER_SETTINGS = {
-#     'SECURITY_DEFINITIONS': {
-#         'api_key': {
-#             'type': 'apiKey',
-#             'in': 'header',
-#             'name': 'Authorization'
-#         }
-#     },
-# }
-# SWAGGER_SETTINGS = {
-#     "exclude_namespaces": [], # List URL namespaces to ignore
-#     "api_version": '0.1',  # Specify your API's version
-#     "api_path": "/",  # Specify the path to your API not a root level
-#     "enabled_methods": [  # Specify which methods to enable in Swagger UI
-#         'get',
-#         'post',
-#         'put',
-#         'patch',
-#         'delete'
-#     ],
-#     "api_key": '', # An API key
-#     "is_authenticated": True,  # Set to True to enforce user authentication,
-#     "is_superuser": True,  # Set to True to enforce admin only access
-# }
 SWAGGER_SETTINGS = {
+    "api_path": "/",  # Specify the path to your API not a root level
+    'exclude_url_names': ['doc'],
     'SECURITY_DEFINITIONS': {
         'api_key': {
             'type': 'apiKey',
