@@ -25,6 +25,7 @@ SECRET_KEY = '6&edv8gsb-nas%+9qa78f$cmr&*w!jo5@eee#_)(a28j$857a9'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+INTERNAL_IPS = ['127.0.0.1']
 
 # Application definition
 
@@ -36,8 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_extensions',
+    'debug_toolbar',
+
     'api',
     'api.v1.users',
+    'api.v1.posts',
 
     'rest_framework',
     'rest_framework_swagger',
@@ -51,7 +56,23 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+# DEBUG_TOOLBAR_PANELS = [
+#     'debug_toolbar.panels.versions.VersionsPanel',
+#     'debug_toolbar.panels.timer.TimerPanel',
+#     'debug_toolbar.panels.settings.SettingsPanel',
+#     'debug_toolbar.panels.headers.HeadersPanel',
+#     'debug_toolbar.panels.request.RequestPanel',
+#     'debug_toolbar.panels.sql.SQLPanel',
+#     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#     'debug_toolbar.panels.templates.TemplatesPanel',
+#     'debug_toolbar.panels.cache.CachePanel',
+#     'debug_toolbar.panels.signals.SignalsPanel',
+#     'debug_toolbar.panels.logging.LoggingPanel',
+#     'debug_toolbar.panels.redirects.RedirectsPanel',
+# ]
 
 ROOT_URLCONF = 'flatcoke.urls'
 
@@ -131,6 +152,28 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -146,8 +189,6 @@ REST_FRAMEWORK = {
 }
 
 SWAGGER_SETTINGS = {
-    "api_path": "/",  # Specify the path to your API not a root level
-    'exclude_url_names': ['doc'],
     'SECURITY_DEFINITIONS': {
         'api_key': {
             'type': 'apiKey',
@@ -156,8 +197,9 @@ SWAGGER_SETTINGS = {
         }
     },
     'USE_SESSION_AUTH': True,
-    'JSON_EDITOR': True,
 }
 
 LOGIN_URL = 'rest_framework:login'
 LOGOUT_URL = 'rest_framework:logout'
+
+SHELL_PLUS_PRINT_SQL = True  # commend shell_plug with logging sql

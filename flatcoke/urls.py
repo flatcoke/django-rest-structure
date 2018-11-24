@@ -13,18 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='FLATCOKE API')
+schema_view = get_swagger_view(
+    title='FLATCOKE API',
+)
 
 urlpatterns = [
-    url(r'^doc/', schema_view),
+    path('doc/', schema_view),
     path('admin/', admin.site.urls),
 
-    url(r'api/', include('api.urls')),  # All of api
+    path('api/', include('api.urls')),  # All of api
 
-    url(r'', include('rest_framework.urls', namespace='rest_framework')),
+    path('', include('rest_framework.urls', namespace='rest_framework')),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls))
+    ]

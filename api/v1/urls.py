@@ -1,6 +1,8 @@
-from django.conf.urls import url
+from django.urls import path
 from django.urls import include
 
+
 urlpatterns = [
-    url(r'^users/', include('api.v1.users.urls')),
+    path('', include('api.v1.users.urls')),
+    path('', include('api.v1.posts.urls')),
 ]

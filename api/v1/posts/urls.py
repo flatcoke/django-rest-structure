@@ -2,14 +2,14 @@ from django.conf.urls import include
 from django.urls import path
 from rest_framework import routers
 
-from .views import UserViewSet
+from .views import FlogViewSet
 
-app_name = 'users'
+app_name = 'flogs'
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(r'', FlogViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('flogs/', include(router.urls)),
 ]
