@@ -12,7 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 from django_lifecycle import LifecycleModelMixin, hook
 
 from api.models import SoftDeletionManager, SoftDeletionModel
-from api.v1.posts.models import Comment
 
 
 class UserScopeMixin(object):
@@ -46,7 +45,7 @@ class User(LifecycleModelMixin,
     current_login_at = m.DateTimeField(
         _('current login'), blank=True, null=True)
     deleted_at = m.DateTimeField(_('deleted_at'), default=None,
-                                 blank=True, null=False)
+                                 blank=True, null=True)
     created_at = m.DateTimeField(_('created_at'), auto_now_add=True,
                                  null=False)
     updated_at = m.DateTimeField(auto_now=True, null=False)
@@ -65,7 +64,7 @@ class User(LifecycleModelMixin,
         ordering = ['-id']
 
         indexes = [
-            m.Index(fields=['created_at'], name='users.created_at'),
+            m.Index(fields=['created_at'], name='idx_users_created_at'),
         ]
 
     def email_user(self, subject, message, from_email=None):

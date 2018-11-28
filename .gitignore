@@ -114,3 +114,7 @@ dmypy.json
 .pyre/
 
 dbdata
+
+# vim
+.*.swp
+.*.swo

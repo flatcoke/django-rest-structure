@@ -19,10 +19,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6&edv8gsb-nas%+9qa78f$cmr&*w!jo5@eee#_)(a28j$857a9'  # FIXME: .env
+SECRET_KEY = os.environ.get('SECRET_KEY',
+                            'hjk*3AAd*_sfjk4*FGHFBaar!SDrnhf*')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 INTERNAL_IPS = ['127.0.0.1']
@@ -85,19 +85,13 @@ WSGI_APPLICATION = 'flatcoke.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {  # FIXME: .env
+    'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'flatcoke',
-        'USER': 'cola',
-        'PASSWORD': 'qwer1234',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        # 'TEST': {
-        #     'NAME': 'flatcoke',
-        # },
-        # 'OPTIONS': {
-        #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        # },
+        'NAME': os.environ.get('DATABASE', 'flatcoke'),
+        'USER': os.environ.get('DB_USER', 'cola'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'qwer1234'),
+        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
 
@@ -193,3 +187,4 @@ LOGIN_URL = 'rest_framework:login'
 LOGOUT_URL = 'rest_framework:logout'
 
 SHELL_PLUS_PRINT_SQL = True  # commend shell_plug with logging sql
+SITE_ID = 1

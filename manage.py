@@ -6,7 +6,8 @@ import os
 
 if __name__ == "__main__":
     dotenv.read_dotenv()
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flatcoke.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                          "flatcoke.settings.development")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

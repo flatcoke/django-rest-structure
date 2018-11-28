@@ -8,8 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 class Flog(m.Model):
     id = m.AutoField(primary_key=True)
     user = m.ForeignKey('users.User', on_delete=m.CASCADE, related_name="flogs")
-    content = m.TextField(_('content'), null=True)
     title = m.CharField(_('title'), null=False, max_length=50)
+    content = m.TextField(_('content'), null=True)
 
     created_at = m.DateTimeField(_('created'), auto_now_add=True, null=False)
     updated_at = m.DateTimeField(auto_now=True, null=False)
@@ -23,7 +23,7 @@ class Flog(m.Model):
         db_table = 'flogs'
         ordering = ['-id']
         indexes = [
-            m.Index(fields=['created_at'], name='posts.created_at'),
+            m.Index(fields=['created_at'], name='idx_flogs_created_at'),
         ]
 
 
@@ -31,8 +31,8 @@ class Flatgram(m.Model):
     id = m.AutoField(primary_key=True)
     user = m.ForeignKey('users.User', related_name="flatgrams",
                         on_delete=m.CASCADE, )
-    content = m.TextField(_('content'), null=True)
     title = m.CharField(_('title'), null=False, max_length=50)
+    content = m.TextField(_('content'), null=True)
 
     created_at = m.DateTimeField(_('created'), auto_now_add=True, null=False)
     updated_at = m.DateTimeField(auto_now=True, null=False)
@@ -46,7 +46,7 @@ class Flatgram(m.Model):
         db_table = 'flatgrams'
         ordering = ['-id']
         indexes = [
-            m.Index(fields=['created_at'], name='posts.created_at'),
+            m.Index(fields=['created_at'], name='idx_flatgrams_created_at'),
         ]
 
 
@@ -71,5 +71,5 @@ class Comment(m.Model):
         db_table = 'comments'
         ordering = ['id']
         indexes = [
-            m.Index(fields=['created_at'], name='posts.created_at'),
+            m.Index(fields=['created_at'], name='idx_comments_created_at'),
         ]
