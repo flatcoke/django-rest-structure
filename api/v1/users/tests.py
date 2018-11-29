@@ -66,7 +66,7 @@ class UserTest(APITestCase):
             email_field = result.json().get('email')
             self.assertIsNotNone(email_field)
 
-    def test_not_unique_email(self):
+    def test_validate_unique_email(self):
         email = 'iam@flatcoke.com'
         password = fake.password()
         username = fake.user_name()
@@ -79,7 +79,7 @@ class UserTest(APITestCase):
             self.assertIsNotNone(result.json().get('email'))
             self.assertIn('Already exists email', result.json().get('email'))
 
-    def test_not_unique_username(self):
+    def test_validate_unique_username(self):
         username = 'flatcoke'
         password = fake.password()
         email = fake.email()
@@ -93,7 +93,22 @@ class UserTest(APITestCase):
             self.assertIn('Already exists username',
                           result.json().get('username'))
 
+    def test_validate_unique_username_after_soft_delete(self):
+        pass
+
+    def test_validate_unique_email_after_soft_delete(self):
+        pass
+
     def test_short_password(self):
+        pass
+
+    def test_login(self):
+        pass
+
+    def test_update_jwt_token_on_client_side(self):
+        pass
+
+    def test_re_generate_token_by_refresh_token(self):
         pass
 
     def test_login(self):
@@ -127,4 +142,7 @@ class UserTest(APITestCase):
         pass
 
     def test_delete_user_without_token(self):
+        pass
+
+    def test_soft_delete_user(self):
         pass
