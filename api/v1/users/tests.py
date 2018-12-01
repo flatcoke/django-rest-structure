@@ -94,12 +94,38 @@ class UserTest(APITestCase):
                           result.json().get('username'))
 
     def test_validate_unique_username_after_soft_delete(self):
-        pass
+        username = 'flatcoke'
+        password = fake.password()
+        email = fake.email()
+        user = self.create_user_directly(username=username, email=email,
+                                         password=password)  # success
+        user.delete()
+        self.assertIsNotNone(user.deleted_at)
+
+        email = fake.email()
+        result = self.post_user(username=username, email=email,
+                                password=password)
+        self.assertIsNotNone(result.json().get('username'))
+        self.assertIn('Already exists username',
+                      result.json().get('username'))
 
     def test_validate_unique_email_after_soft_delete(self):
-        pass
+        email = 'flatcoke@gmail.com'
+        password = fake.password()
+        username = fake.user_name()
+        user = self.create_user_directly(username=username, email=email,
+                                         password=password)  # success
+        user.delete()
+        self.assertIsNotNone(user.deleted_at)
 
-    def test_short_password(self):
+        username = fake.user_name()
+        result = self.post_user(username=username, email=email,
+                                password=password)
+        self.assertIsNotNone(result.json().get('email'))
+        self.assertIn('Already exists email',
+                      result.json().get('email'))
+
+    def test_validate_short_password(self):
         pass
 
     def test_login(self):

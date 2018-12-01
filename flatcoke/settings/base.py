@@ -181,10 +181,9 @@ SWAGGER_SETTINGS = {
         }
     },
     'USE_SESSION_AUTH': True,
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout',
 }
-
-LOGIN_URL = 'rest_framework:login'
-LOGOUT_URL = 'rest_framework:logout'
 
 SHELL_PLUS_PRINT_SQL = True  # commend shell_plug with logging sql
 SITE_ID = 1

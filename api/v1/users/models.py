@@ -53,8 +53,8 @@ class User(LifecycleModelMixin,
     objects = UserManager(only_alive=True)  # for soft delete
 
     last_login = None
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         verbose_name = _('user')
