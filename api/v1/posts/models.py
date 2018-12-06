@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 class Flog(m.Model):
     id = m.AutoField(primary_key=True)
     user = m.ForeignKey('users.User', on_delete=m.CASCADE, related_name="flogs")
-    title = m.CharField(_('title'), null=False, max_length=50)
+    title = m.CharField(_('title'), null=False, max_length=255)
     content = m.TextField(_('content'), null=True)
 
     created_at = m.DateTimeField(_('created'), auto_now_add=True, null=False)
@@ -31,7 +31,7 @@ class Flatgram(m.Model):
     id = m.AutoField(primary_key=True)
     user = m.ForeignKey('users.User', related_name="flatgrams",
                         on_delete=m.CASCADE, )
-    title = m.CharField(_('title'), null=False, max_length=50)
+    title = m.CharField(_('title'), null=False, max_length=255)
     content = m.TextField(_('content'), null=True)
 
     created_at = m.DateTimeField(_('created'), auto_now_add=True, null=False)

@@ -24,6 +24,19 @@ class UserManager(SoftDeletionManager, SuperUserManager, UserScopeMixin):
     def __init__(self, *args, **kwargs):
         super(UserManager, self).__init__(*args, **kwargs)
 
+    def _create_user(self, username, email, password, **extra_fields):
+        """
+        Create and save a user with the given username, email, and password.
+        """
+        if not username:
+            raise ValueError('The given username must be set')
+        email = self.normalize_email(email)
+        username = self.model.normalize_username(username)
+        user = self.model(username=username, email=email, password=password,
+                          **extra_fields)
+        user.save(using=self._db)
+        return user
+
 
 class User(LifecycleModelMixin,
            AbstractBaseUser,
@@ -36,14 +49,14 @@ class User(LifecycleModelMixin,
     """
     id = m.AutoField(primary_key=True)
     username = m.CharField(_('username'), unique=True, max_length=30)
-    email = m.EmailField(_('email address'), unique=True, max_length=254)
+    email = m.EmailField(_('email address'), unique=True, max_length=100)
     password = m.CharField(_('password'), max_length=128)
     is_staff = m.BooleanField(_('staff status'), default=False, )
     is_active = m.BooleanField(_('active'), default=True, )
     is_superuser = m.BooleanField(_('superuser'), default=False, )
     last_login_at = m.DateTimeField(_('last login'), blank=True, null=True)
-    current_login_at = m.DateTimeField(
-        _('current login'), blank=True, null=True)
+    current_login_at = m.DateTimeField(_('current login'), blank=True,
+                                       null=True)
     deleted_at = m.DateTimeField(_('deleted_at'), default=None,
                                  blank=True, null=True)
     created_at = m.DateTimeField(_('created_at'), auto_now_add=True,

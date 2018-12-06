@@ -46,6 +46,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_swagger',
+    'oauth2_provider',
+
 ]
 
 MIDDLEWARE = [
@@ -169,6 +171,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         # FIXME: session only dev
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
 }
 
@@ -187,3 +190,8 @@ SWAGGER_SETTINGS = {
 
 SHELL_PLUS_PRINT_SQL = True  # commend shell_plug with logging sql
 SITE_ID = 1
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
+}

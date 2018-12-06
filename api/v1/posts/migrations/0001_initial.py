@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('title',
-                 models.CharField(max_length=50, verbose_name='title')),
+                 models.CharField(max_length=255, verbose_name='title')),
                 ('content',
                  models.TextField(null=True, verbose_name='content')),
                 ('created_at', models.DateTimeField(auto_now_add=True,
@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 (
                     'title',
-                    models.CharField(max_length=50, verbose_name='title')),
+                    models.CharField(max_length=255, verbose_name='title')),
                 (
                     'content',
                     models.TextField(null=True, verbose_name='content')),

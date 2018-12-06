@@ -1,9 +1,10 @@
+from django.db.utils import IntegrityError
 from faker import Faker
 from rest_framework.test import APITestCase
 
 from .models import User
 
-fake = Faker()
+fake = Faker('ko_KR')
 
 
 class UserTest(APITestCase):
@@ -124,6 +125,22 @@ class UserTest(APITestCase):
         self.assertIsNotNone(result.json().get('email'))
         self.assertIn('Already exists email',
                       result.json().get('email'))
+
+    def test_blank_username(self):
+        try:
+            _ = User.objects.create(email=fake.email(), username=None,
+                                    password=fake.password())
+            raise Exception('Username can not be null')
+        except IntegrityError:
+            pass
+
+    def test_blank_email(self):
+        try:
+            _ = User.objects.create(email=None, username=fake.user_name(),
+                                    password=fake.password())
+            raise Exception('Email can not be null')
+        except IntegrityError:
+            pass
 
     def test_validate_short_password(self):
         pass
