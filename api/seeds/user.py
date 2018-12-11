@@ -1,6 +1,7 @@
-from faker import Faker
-from api.v1.users.models import User
 from django.db import transaction
+from faker import Faker
+
+from api.v1.users.models import User
 
 
 @transaction.atomic

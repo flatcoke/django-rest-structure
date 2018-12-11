@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'oauth2_provider',
-
+    'cacheops',
 ]
 
 MIDDLEWARE = [
@@ -194,4 +194,19 @@ SITE_ID = 1
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
+}
+
+CACHEOPS_REDIS = {
+    'host': os.environ.get('REDIS_HOST', 'localhost'),
+    'port': os.environ.get('REDIS_PORT', '6379'),
+    'db': os.environ.get('REDIS_DB', 0),
+}
+
+CACHEOPS_DEFAULTS = {
+    'timeout': 60 * 60
+}
+
+CACHEOPS = {
+    'users.user': {'ops': 'get', 'timeout': 60 * 15},
+    '*.*': {},
 }
