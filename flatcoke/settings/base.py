@@ -171,7 +171,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         # FIXME: session only dev
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),
 }
 

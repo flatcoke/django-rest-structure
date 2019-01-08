@@ -13,6 +13,22 @@ class UserTest(APITestCase):
         return User.objects.create(username=username,
                                    email=email, password=password)
 
+    @staticmethod
+    def create_user_like_by_facebook_token():
+        return User.objects.create(username='TaeminKim',
+                                   email='flatcoke@test.com',
+                                   provider='facebook',
+                                   uid=fake.random.randrange(1, 999999),
+                                   password=User.objects.make_random_password())
+
+    @staticmethod
+    def create_user_like_by_google_token():
+        return User.objects.create(username='TaeminKim',
+                                   email='flatcoke@gmail.com',
+                                   provider='google',
+                                   uid=fake.random.randrange(1, 999999),
+                                   password=User.objects.make_random_password())
+
     def post_user(self, username, email, password):
         return self.client.post('/api/v1/users/', {'username': username,
                                                    'email': email,
