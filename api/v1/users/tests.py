@@ -1,6 +1,6 @@
 from django.db.utils import IntegrityError
 from faker import Faker
-from rest_framework.test import APITestCase
+from api.common.tests import generate_jwt_token_by_user, APITestCase
 
 from .models import User
 
@@ -12,6 +12,11 @@ class UserTest(APITestCase):
     def create_user_directly(username, email, password):
         return User.objects.create(username=username,
                                    email=email, password=password)
+
+    @classmethod
+    def create_flatcoke(cls):
+        return cls.create_user_directly('flatcoke', 'flatcoke@test.com',
+                                        'qwer1234')
 
     @staticmethod
     def create_user_like_by_facebook_token():
@@ -142,7 +147,7 @@ class UserTest(APITestCase):
         self.assertIn('Already exists email',
                       result.json().get('email'))
 
-    def test_blank_username(self):
+    def test_create_user_with_blank_username(self):
         try:
             _ = User.objects.create(email=fake.email(), username=None,
                                     password=fake.password())
@@ -150,7 +155,7 @@ class UserTest(APITestCase):
         except IntegrityError:
             pass
 
-    def test_blank_email(self):
+    def test_create_user_with_blank_email(self):
         try:
             _ = User.objects.create(email=None, username=fake.user_name(),
                                     password=fake.password())
@@ -161,47 +166,68 @@ class UserTest(APITestCase):
     def test_validate_short_password(self):
         pass
 
-    def test_login(self):
-        pass
+    def test_jwt_token_and_update_username_by_the_token(self):
+        user = self.create_flatcoke()
+        res = self.client.post('/api/auth/token/',
+                               {'email': user.email,
+                                'password': 'qwer1234'})
+        self.assertEqual(res.status_code, 200)
+        json_data = res.json()
+        self.assertIn('token', json_data)
+        token = json_data['token']
+        self.assertTrue(self.update_username_for_token(user, token))
 
-    def test_update_jwt_token_on_client_side(self):
-        pass
+    def test_jwt_refresh_token_and_update_username_by_the_token(self):
+        user = self.create_flatcoke()
+        token = generate_jwt_token_by_user(user)
 
-    def test_re_generate_token_by_refresh_token(self):
-        pass
+        res = self.client.post('/api/auth/token/refresh/', {'token': token})
+        self.assertEqual(res.status_code, 200)
+        token = res.json()['token']
+        self.assertTrue(self.update_username_for_token(user, token))
 
-    def test_login(self):
-        pass
+    def update_username_for_token(self, user, token):
+        user_id = User.objects.filter(email=user.email) \
+            .values_list('id', flat=True).first()
+        res = self.client.get('/api/v1/users/%s/' % user_id)
+        if res.status_code != 403:
+            return False
+        headers = {'HTTP_AUTHORIZATION': 'JWT ' + token}
 
-    def test_validate_jwt_token_after_login(self):
-        pass
+        res = self.client.get('/api/v1/users/1/', {}, **headers)
+        if res.status_code != 200:
+            return False
 
-    def test_login_not_match_password(self):
-        pass
+        will_be_this = 'Taemin'
+        self.client.patch('/api/v1/users/1/',
+                          {'username': will_be_this}, **headers)
+        username_after_patching = User.objects. \
+            values_list('username', flat=True).get(pk=user_id)
+        return username_after_patching == will_be_this
 
-    def test_login_not_found_email(self):
-        pass
+    def test_get_jwt_token_with_not_matched_password(self):
+        user = self.create_flatcoke()
+        res = self.client.post('/api/auth/token/',
+                               {'email': user.email,
+                                'password': 'this_is_not_valid_password'})
+        self.assertEqual(res.status_code, 400)
 
-    def test_login_not_found_username(self):
-        pass
+    def test_update_username_with_invalid_token(self):
+        user = self.create_flatcoke()
+        self.assertFalse(self.update_username_for_token(
+            user, 'this.if.not_token'))
 
-    def test_update_profile_with_token(self):
-        pass
+    def test_soft_delete_user(self):
+        user = self.create_flatcoke()
+        headers = self.header_with_jwt_token(user)
+        res = self.client.delete('/api/v1/users/%s/' % user.id, {}, **headers)
+        self.assertEqual(res.status_code, 204)
 
-    def test_update_profile_with_invalid_token(self):
-        pass
-
-    def test_update_profile_without_token(self):
-        pass
-
-    def test_delete_user_with_token(self):
-        pass
+        self.assertIsNone(User.objects.filter(email=user.email).first())
+        self.assertIsNotNone(User.with_deleted.filter(email=user.email).first())
 
     def test_delete_user_with_invalid_token(self):
         pass
 
     def test_delete_user_without_token(self):
-        pass
-
-    def test_soft_delete_user(self):
         pass
