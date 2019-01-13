@@ -1,4 +1,5 @@
 from django.db.utils import IntegrityError
+from rest_framework import status
 from faker import Faker
 from api.common.tests import generate_jwt_token_by_user, APITestCase
 
@@ -70,7 +71,7 @@ class UserTest(APITestCase):
         ]
         for data in cases:
             result = self.post_user(**data)
-            self.assertEqual(result.status_code, 201)
+            self.assertEqual(result.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_email(self):
         cases = [
@@ -84,7 +85,7 @@ class UserTest(APITestCase):
             password = fake.password()
             result = self.post_user(username=username, email=i,
                                     password=password)
-            self.assertEqual(result.status_code, 400)
+            self.assertEqual(result.status_code, status.HTTP_400_BAD_REQUEST)
             email_field = result.json().get('email')
             self.assertIsNotNone(email_field)
 
@@ -171,32 +172,45 @@ class UserTest(APITestCase):
         res = self.client.post('/api/auth/token/',
                                {'email': user.email,
                                 'password': 'qwer1234'})
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         json_data = res.json()
         self.assertIn('token', json_data)
         token = json_data['token']
-        self.assertTrue(self.update_username_for_token(user, token))
+
+        user_id = User.objects.filter(email=user.email) \
+            .values_list('id', flat=True).first()
+        headers = {'HTTP_AUTHORIZATION': 'JWT ' + token}
+
+        will_be_this = 'Taemin'
+        self.client.patch('/api/v1/users/1/',
+                          {'username': will_be_this}, **headers)
+        username_after_patching = User.objects. \
+            values_list('username', flat=True).get(pk=user_id)
+        self.assertEqual(username_after_patching, will_be_this)
 
     def test_jwt_refresh_token_and_update_username_by_the_token(self):
         user = self.create_flatcoke()
         token = generate_jwt_token_by_user(user)
 
         res = self.client.post('/api/auth/token/refresh/', {'token': token})
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         token = res.json()['token']
-        self.assertTrue(self.update_username_for_token(user, token))
+
+        user_id = User.objects.filter(email=user.email) \
+            .values_list('id', flat=True).first()
+        headers = {'HTTP_AUTHORIZATION': 'JWT ' + token}
+
+        will_be_this = 'Taemin'
+        self.client.patch('/api/v1/users/1/',
+                          {'username': will_be_this}, **headers)
+        username_after_patching = User.objects. \
+            values_list('username', flat=True).get(pk=user_id)
+        self.assertEqual(username_after_patching, will_be_this)
 
     def update_username_for_token(self, user, token):
         user_id = User.objects.filter(email=user.email) \
             .values_list('id', flat=True).first()
-        res = self.client.get('/api/v1/users/%s/' % user_id)
-        if res.status_code != 403:
-            return False
         headers = {'HTTP_AUTHORIZATION': 'JWT ' + token}
-
-        res = self.client.get('/api/v1/users/1/', {}, **headers)
-        if res.status_code != 200:
-            return False
 
         will_be_this = 'Taemin'
         self.client.patch('/api/v1/users/1/',
@@ -210,24 +224,42 @@ class UserTest(APITestCase):
         res = self.client.post('/api/auth/token/',
                                {'email': user.email,
                                 'password': 'this_is_not_valid_password'})
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_update_username_with_invalid_token(self):
+    def test_update_username_with_invalid_token_and_without_token(self):
         user = self.create_flatcoke()
-        self.assertFalse(self.update_username_for_token(
-            user, 'this.if.not_token'))
+        token = 'this.is.not_valid_token'
+        user_id = User.objects.filter(email=user.email) \
+            .values_list('id', flat=True).first()
+        headers = {'HTTP_AUTHORIZATION': 'JWT ' + token}
+
+        wont_be_this = 'Taemin'
+        res = self.client.patch('/api/v1/users/1/',
+                          {'username': wont_be_this}, **headers)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        username_after_patching = User.objects. \
+            values_list('username', flat=True).get(pk=user_id)
+        self.assertNotEqual(username_after_patching, wont_be_this)
+
+        res = self.client.patch('/api/v1/users/1/',
+                                {'username': wont_be_this})
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        username_after_patching = User.objects. \
+            values_list('username', flat=True).get(pk=user_id)
+        self.assertNotEqual(username_after_patching, wont_be_this)
 
     def test_soft_delete_user(self):
         user = self.create_flatcoke()
+        another_user = self.create_user_directly('aa', 'bb@cc.com', 'qwer1234')
+        headers = self.header_with_jwt_token(another_user)
+
+        # Try to delete user using another user token
+        res = self.client.delete('/api/v1/users/%s/' % user.id, {}, **headers)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+
         headers = self.header_with_jwt_token(user)
         res = self.client.delete('/api/v1/users/%s/' % user.id, {}, **headers)
-        self.assertEqual(res.status_code, 204)
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
 
         self.assertIsNone(User.objects.filter(email=user.email).first())
         self.assertIsNotNone(User.with_deleted.filter(email=user.email).first())
-
-    def test_delete_user_with_invalid_token(self):
-        pass
-
-    def test_delete_user_without_token(self):
-        pass
