@@ -1,7 +1,7 @@
 from faker import Faker
 from django.db import transaction
-from api.v1.users.models import User
-from api.v1.posts.models import Flog, Comment
+from api.users.models import User
+from api.posts import Flog, Comment
 from api.management.commands.seed import SeedException
 from random import choice, choices
 

@@ -1,7 +1,5 @@
 from django.core.management.base import BaseCommand
 from optparse import make_option
-from api import seeds
-from api.v1.users.models import User
 import sys
 
 

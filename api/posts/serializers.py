@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from api.v1.users.serializers import UserSerializer
-from api.v1.posts.models import Flog, Flatgram, Comment
+from api.users.serializers import UserSerializer
+from api.posts.models import Flog, Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):

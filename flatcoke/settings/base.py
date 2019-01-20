@@ -27,6 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY',
 
 ALLOWED_HOSTS = []
 INTERNAL_IPS = ['127.0.0.1']
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Application definition
 
@@ -42,12 +43,15 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     'api',
-    'api.v1.users',
-    'api.v1.posts',
+    'api.users',
+    'api.posts',
 
-    'rest_framework',
-    'rest_framework_swagger',
-    'cacheops',
+    'rest_framework',  # For rest api
+    'rest_framework_swagger',  # Doc
+    'cacheops',  # ORM cache
+
+    'django_celery_results',  # Worker result
+    'django_celery_beat',  # Worker scheduler
 ]
 
 MIDDLEWARE = [
@@ -241,3 +245,13 @@ JWT_AUTH = {
     'JWT_AUTH_COOKIE': None,
 
 }
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL',
+                                   'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER_BACKEND',
+                                       'redis://localhost:6379/0')
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'

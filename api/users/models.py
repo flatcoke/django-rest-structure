@@ -13,8 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 from django_lifecycle import LifecycleModelMixin, hook
 
 from api.models import SoftDeletionManager, SoftDeletionModel
-from api.v1.users.exceptions import (InvalidFacebookTokenException,
-                                     InvalidGoogleOauthTokenException)
+from api.users.exceptions import (InvalidFacebookTokenException,
+                                  InvalidGoogleOauthTokenException)
 
 VALID_FACEBOOK_TOKEN_URL = "https://graph.facebook.com/me"
 VALID_GOOGLE_OAUTH2_TOKEN_URL = "https://www.googleapis.com/oauth2/v1/userinfo"

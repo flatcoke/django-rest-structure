@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from api.v1.posts.models import Flog
-from api.v1.posts.serializers import FlogSerializer
+from api.posts.models import Flog
+from api.posts.serializers import FlogSerializer
 
 
 class FlogViewSet(viewsets.ModelViewSet):

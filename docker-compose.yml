@@ -11,14 +11,37 @@ services:
       MYSQL_USER: cola
       MYSQL_PASSWORD: qwer1234
       MYSQL_DATABASE: flatcoke
-    restart: always
     ports:
       - 3306:3306
+
   redis:
     image: redis
+    restart: always
     ports:
       - "6379:6379"
+
+  worker: &app_base
+    build: .
     restart: always
+    volumes:
+      - .:/www/server
+    command: bash -c "sh run_celery.sh"
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+    env_file: .env
+    environment:
+      - C_FORCE_ROOT=true
+
+  app:
+    <<: *app_base
+    command: >
+      bash -c "sh run_uwsgi.sh"
+    ports:
+      - "8000:8000"
 
 volumes:
   dbdata:
