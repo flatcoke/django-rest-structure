@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework_swagger',  # Doc
     'cacheops',  # ORM cache
 
-    'django_celery_results',  # Worker result
+    # https://github.com/celery/django-celery-results/issues/19
+    # 'django_celery_results',  # Worker result (It doesn't work)
     'django_celery_beat',  # Worker scheduler
 ]
 
@@ -91,12 +92,15 @@ WSGI_APPLICATION = 'flatcoke.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+db_user = os.environ.get('DB_USER', 'cola')
+db_password = os.environ.get('DB_PASSWORD', 'qwer1234')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DATABASE', 'flatcoke'),
-        'USER': os.environ.get('DB_USER', 'cola'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'qwer1234'),
+        'USER': db_user,
+        'PASSWORD': db_password,
         'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
         'PORT': os.environ.get('DB_PORT', '3306'),
     }
@@ -248,8 +252,7 @@ JWT_AUTH = {
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL',
                                    'redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER_BACKEND',
-                                       'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = 'django-db'
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
