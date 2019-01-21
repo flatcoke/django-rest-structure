@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY',
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 INTERNAL_IPS = ['127.0.0.1']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
