@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'cacheops',  # ORM cache
 
     # https://github.com/celery/django-celery-results/issues/19
-    # 'django_celery_results',  # Worker result (It doesn't work)
+    'django_celery_results',  # Worker result (It doesn't work)
     'django_celery_beat',  # Worker scheduler
 ]
 
@@ -251,7 +251,7 @@ JWT_AUTH = {
 }
 
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL',
-                                   'redis://localhost:6379/0')
+                                   'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = 'django-db'
 
 CELERY_ACCEPT_CONTENT = ['application/json']

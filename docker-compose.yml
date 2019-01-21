@@ -20,24 +20,37 @@ services:
     ports:
       - "6379:6379"
 
-  worker: &app_base
+  celery:
+    build: .
+    command: celery -A flatcoke worker -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A flatcoke beat -l info
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+
+  app:
     build: .
     restart: always
     volumes:
       - .:/www/server
-    command: bash -c "sh run_celery.sh"
     links:
-      - db
-      - redis
+    - db
+    - redis
     depends_on:
-      - db
-      - redis
+    - db
+    - redis
     env_file: .env
     environment:
-      - C_FORCE_ROOT=true
-
-  app:
-    <<: *app_base
+    - C_FORCE_ROOT=true
     command: >
       bash -c "sh run_uwsgi.sh"
     ports:
