@@ -18,6 +18,6 @@ for i in f.readlines():
     if os.environ.get(i.rstrip()) is None:
         raise EnvironmentError('must set env in list of env_example file')
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flatcoke.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flatcoke.settings.development")
 
 application = get_wsgi_application()

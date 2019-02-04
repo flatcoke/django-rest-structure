@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from api.users.serializers import UserSerializer
-from api.posts.models import Flog, Comment
+from api.posts.models import Post, Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -23,5 +23,5 @@ class FlogSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
-        model = Flog
+        model = Post
         fields = ('id', 'user', 'title', 'content', 'comments', 'created_at')

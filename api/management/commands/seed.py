@@ -14,7 +14,7 @@ class SeedException(Exception):
 
 class Command(BaseCommand):
     MODEL_LIST_WITH_ORDER = [
-        'user', 'flog', 'flatgram'
+        'user', 'post', 'photo'
     ]
 
     help = 'Seed your Django database with fake data'

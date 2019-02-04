@@ -5,9 +5,9 @@ from django.db import models as m
 from django.utils.translation import ugettext_lazy as _
 
 
-class Flog(m.Model):
+class Post(m.Model):
     id = m.AutoField(primary_key=True)
-    user = m.ForeignKey('users.User', on_delete=m.CASCADE, related_name="flogs")
+    user = m.ForeignKey('users.User', on_delete=m.CASCADE, related_name="posts")
     title = m.CharField(_('title'), null=False, max_length=255)
     content = m.TextField(_('content'), null=True)
 
@@ -18,18 +18,18 @@ class Flog(m.Model):
                                content_type_field='post_type')
 
     class Meta:
-        verbose_name = _('flog')
-        verbose_name_plural = _('flogs')
-        db_table = 'flogs'
+        verbose_name = _('post')
+        verbose_name_plural = _('posts')
+        db_table = 'posts'
         ordering = ['-id']
         indexes = [
-            m.Index(fields=['created_at'], name='idx_flogs_created_at'),
+            m.Index(fields=['created_at'], name='idx_posts_created_at'),
         ]
 
 
-class Flatgram(m.Model):
+class Photo(m.Model):
     id = m.AutoField(primary_key=True)
-    user = m.ForeignKey('users.User', related_name="flatgrams",
+    user = m.ForeignKey('users.User', related_name="photos",
                         on_delete=m.CASCADE, )
     title = m.CharField(_('title'), null=False, max_length=255)
     content = m.TextField(_('content'), null=True)
@@ -41,12 +41,12 @@ class Flatgram(m.Model):
                                content_type_field='post_type')
 
     class Meta:
-        verbose_name = _('flatgram')
-        verbose_name_plural = _('flatgrams')
-        db_table = 'flatgrams'
+        verbose_name = _('photo')
+        verbose_name_plural = _('photos')
+        db_table = 'photos'
         ordering = ['-id']
         indexes = [
-            m.Index(fields=['created_at'], name='idx_flatgrams_created_at'),
+            m.Index(fields=['created_at'], name='idx_photos_created_at'),
         ]
 
 

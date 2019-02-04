@@ -1,7 +1,7 @@
 from faker import Faker
 from django.db import transaction
 from api.users.models import User
-from api.posts import Flog, Comment
+from api.posts.models import Post, Comment
 from api.management.commands.seed import SeedException
 from random import choice, choices
 
@@ -19,7 +19,7 @@ def generate_data(number):
 
     flogs = []
     for u in users:
-        flogs.append(Flog.objects.create(title=fake.sentence(),
+        flogs.append(Post.objects.create(title=fake.sentence(),
                                          content=fake.sentence(), user=u))
     comments = []
     for f in choices(flogs, k=int(len(flogs) / 2)):
