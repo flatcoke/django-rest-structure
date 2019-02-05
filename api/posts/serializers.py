@@ -13,7 +13,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('user', 'content', 'created_at')
 
 
-class FlogSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(required=True)
     content = serializers.CharField(required=True)
