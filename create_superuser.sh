@@ -1,0 +1,1 @@
+./manage.py shell -c "from api.users.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'qwer1234') if not User.objects.filter(email='admin@example.com').exists() else None"

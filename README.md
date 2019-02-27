@@ -26,4 +26,6 @@ $ docker-compose exec -it app python manage.py test
 ```
 
 ## URL
-[http://localhost:8000/doc](http://localhost:8000/doc)
+[http://localhost:8000/doc (login page and redirect)](http://localhost:8000/login/?next=/doc/)
+
+* email: `admin@example.com` password: `qwer1234`
