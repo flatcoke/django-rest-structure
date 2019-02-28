@@ -37,6 +37,12 @@ services:
       - db
       - redis
 
+  flower:
+    image: mher/flower
+    command: ["flower", "--broker=redis://redis:6379/0", "--port=8888"]
+    ports:
+       - 8888:8888
+
   app:
     build: .
     restart: always
