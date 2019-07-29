@@ -26,7 +26,7 @@ $ docker-compose exec -it app python manage.py test
 ```
 
 ## URL
-[http://localhost:8000/doc](http://localhost:8000/login/?next=/doc/)
+[http://localhost:8000/doc](http://localhost:8000/login/?next=/doc/) Documentation(swagger)
 * **email**: `admin@example.com` **password**: `qwer1234`
 
-[http://localhost:8888](http://localhost:8888) Job monitor 
+[http://localhost:8888](http://localhost:8888) Job monitor(flower)
