@@ -17,7 +17,7 @@ django-lifecycle==0.3.1
 django-model-utils==3.1.2
 django-rest-swagger==2.1.2
 django-timezone-field==3.0
-djangorestframework==3.9.0
+djangorestframework==3.9.1
 djangorestframework-jwt==1.11.0
 Faker==1.0.0
 funcy==1.11
