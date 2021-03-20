@@ -23,7 +23,7 @@ Faker==1.0.0
 funcy==1.11
 idna==2.7
 itypes==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 kombu==4.2.2.post1
 MarkupSafe==1.0
 mysqlclient==1.3.13
