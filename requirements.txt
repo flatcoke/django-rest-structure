@@ -39,6 +39,6 @@ six==1.11.0
 sqlparse==0.2.4
 text-unidecode==1.2
 uritemplate==3.0.0
-urllib3==1.24.2
+urllib3==1.26.5
 uWSGI==2.0.17.1
 vine==1.2.0
