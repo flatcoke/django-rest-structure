@@ -8,7 +8,7 @@ coreschema==0.0.4
 Django==2.2.24
 django-cacheops==4.1
 django-celery-beat==1.4.0
-django-celery-results==1.0.4
+django-celery-results==2.4.0
 django-cors-headers==2.4.0
 django-debug-toolbar==1.11.1
 django-dotenv==1.4.2
