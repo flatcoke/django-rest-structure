@@ -6,7 +6,7 @@
 * **life-cycle**:  Helper for model signal(hook)
 * **django-cacheops**: django ORM cache
 * **swagger**: api documentation
-* **JWT**: authority
+* **JWT**: authentication
 * **etc** ~
 
 
